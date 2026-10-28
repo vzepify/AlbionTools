@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AO Refinery — Fight & Craft Calculators for Albion Online</title>
+<style>
+:root {
+  --site-primary: #8b5a2b;
+  --site-on-primary: #ffffff;
+  --site-secondary: #d6b77a;
+  --site-on-secondary: #20180e;
+  --site-background: #171715;
+  --site-on-background: #f1eadb;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Georgia, "Times New Roman", serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  --ink: #f1eadb;
+  --muted: #b2aa99;
+  --paper: #22211e;
+  --line: #454037;
+  --accent: #e6bd69;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; font-family: var(--site-font-body); background: light-dark(var(--site-background), #141916); color: light-dark(var(--site-on-background), #f2f0e8); }
+.app { background-color: var(--site-background); color: var(--site-on-background); min-height: 100vh; width: 100%; border-radius: 0; overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+.announcement { display:flex; justify-content:center; gap:10px; align-items:center; padding:10px 18px; background:var(--site-primary); color:var(--site-on-primary); font-size:11px; letter-spacing:.1em; text-transform:uppercase; }
+.announcement span { color:var(--accent); }
+.nav { height:78px; display:flex; align-items:center; justify-content:space-between; padding:0 clamp(20px,6vw,84px); background:var(--paper); border-bottom:1px solid var(--line); gap:22px; }
+.brand { display:flex; align-items:center; gap:10px; font-size:19px; font-weight:750; letter-spacing:-.06em; }
+.brand-mark { width:28px; height:28px; border:1.5px solid var(--site-primary); border-radius:50%; display:grid; place-items:center; color:var(--site-primary); font-family:var(--site-font-heading); font-size:17px; }
+.navlinks { display:flex; gap:clamp(16px,2.5vw,34px); align-items:center; font-size:12px; color:#e3dccd; }
+.navlinks a:hover { color:var(--site-primary); }
+.nav-cta, .button-primary { display:inline-flex; align-items:center; justify-content:center; background:var(--site-primary); color:white; border:1px solid var(--site-primary); padding:13px 19px; border-radius:3px; font-size:12px; font-weight:650; transition:.2s; }
+.nav-cta:hover, .button-primary:hover { background:#ad7838; }
+.menu-toggle { display:none; border:1px solid var(--line); background:transparent; padding:8px 11px; border-radius:3px; }
+.hero { display:grid; grid-template-columns:1.02fr .98fr; min-height:600px; background:#24221e; }
+.hero-copy { padding:clamp(42px,7vw,92px) clamp(24px,6vw,84px); display:flex; flex-direction:column; align-items:flex-start; justify-content:center; }
+.eyebrow { text-transform:uppercase; letter-spacing:.16em; font-size:10px; font-weight:750; color:#d6b77a; display:flex; align-items:center; gap:9px; }
+.eyebrow:before { content:""; width:23px; height:1px; background:#7f927f; }
+h1,h2,h3 { margin:0; font-weight:500; }
+h1 { font-family:var(--site-font-heading); font-size:clamp(45px,6.1vw,82px); line-height:.99; letter-spacing:-.055em; margin:26px 0 22px; max-width:600px; }
+h1 em { color:#e6bd69; font-weight:400; }
+.hero-copy p { color:#c6bdac; font-size:14px; line-height:1.8; max-width:430px; margin:0 0 29px; }
+.hero-actions { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.button-secondary { background:transparent; border:1px solid #8b806d; color:#f1eadb; padding:13px 19px; border-radius:3px; font-size:12px; font-weight:650; }
+.button-secondary:hover { background:#fffefa; }
+.hero-note { margin-top:44px; display:flex; gap:12px; align-items:center; color:#c0b49e; font-size:10px; letter-spacing:.06em; }
+.note-dot { width:7px;height:7px;background:#72986b;border-radius:50%; box-shadow:0 0 0 4px #d8e3d0; }
+.hero-art { min-height:450px; position:relative; background:#201a13; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.hero-art:before { content:""; position:absolute; inset:0; opacity:var(--site-decoration-opacity); background:radial-gradient(ellipse at 50% 45%,#8b5a2b55 0,transparent 48%),linear-gradient(135deg,#171614,#342518 55%,#161614); }
+.arch { position:absolute; width:72%; aspect-ratio:1; height:auto; bottom:auto; border-radius:50%; background:transparent; border:1px solid #e6bd694f; box-shadow:0 0 0 18px #e6bd690c,0 0 0 38px #e6bd6908,0 0 0 65px #e6bd6905; }
+.arch:before { content:""; position:absolute; inset:7%; border-radius:50%; background:linear-gradient(145deg,#d7b76f,#74451e 53%,#2b2117); border:2px solid #f1d28a; box-shadow:inset 0 0 0 8px #3a2817; }
+.product-shape { position:absolute; width:36%; aspect-ratio:1; height:auto; left:32%; top:31%; border-radius:50%; background:linear-gradient(145deg,#f4dfa0,#b17a2f 53%,#61401e); border:2px solid #f7df9e; box-shadow:0 18px 45px #0009,inset 0 0 0 6px #805522; transform:rotate(-8deg); }
+.product-shape:before { content:"⚔"; position:absolute; inset:0; display:grid; place-items:center; color:#422b17; font-size:clamp(42px,7vw,86px); text-shadow:0 1px #ffe5a5; border:1px solid #f5d98d; border-radius:50%; margin:12%; }
+.product-shape:after { content:"AO REFINERY"; position:absolute; bottom:18%; left:0; right:0; text-align:center; font-size:clamp(6px,.75vw,10px); font-weight:800; letter-spacing:.18em; color:#382513; }
+.art-label { position:absolute; z-index:2; color:#fffdf4; text-transform:uppercase; letter-spacing:.16em; font-size:9px; }
+.art-label.top { top:28px; left:30px; } .art-label.bottom { right:28px; bottom:25px; text-align:right; }
+.art-card { position:absolute; z-index:3; bottom:30px; left:28px; background:#211b13ed; color:#f1eadb; border:1px solid #8b5a2b; padding:16px 19px; width:185px; backdrop-filter:blur(6px); }
+.art-card small { color:#d6b77a; text-transform:uppercase; letter-spacing:.13em; font-size:8px; }
+.art-card strong { display:block; font-family:var(--site-font-heading); font-size:19px; font-weight:500; margin-top:7px; }
+.trust-row { display:grid; grid-template-columns:repeat(4,1fr); padding:24px clamp(24px,6vw,84px); background:var(--paper); border-bottom:1px solid var(--line); gap:18px; }
+.trust-item { display:flex; gap:12px; align-items:center; font-size:11px; color:#ded5c4; }
+.trust-icon { width:32px;height:32px;border:1px solid #776342;border-radius:50%;display:grid;place-items:center;color:#e6bd69;font-size:15px;flex-shrink:0; }
+.section { padding:clamp(65px,9vw,112px) clamp(24px,8vw,112px); }
+.section-head { display:flex; justify-content:space-between; align-items:end; gap:25px; margin-bottom:42px; }
+.section h2 { font-family:var(--site-font-heading); font-size:clamp(34px,4.3vw,55px); line-height:1.05; letter-spacing:-.045em; max-width:590px; }
+.section-head p { max-width:340px; font-size:12px; line-height:1.8; color:var(--muted); margin:0; }
+.product-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.product-card { background:var(--paper); border:1px solid var(--line); transition:transform .2s, box-shadow .2s; }
+.product-card:hover { transform:translateY(-4px); box-shadow:0 12px 28px #1a33210c; }
+.product-image { height:225px; display:grid; place-items:center; position:relative; overflow:hidden; background:#e9e9df; }
+.product-image:before { content:""; position:absolute; width:180px;height:180px;border-radius:50%;background:#d0d8c9; }
+.product-image.sand { background:#eee6da; }.product-image.sand:before { background:#d8c9b4; }
+.product-image.blue { background:#e0e6e4; }.product-image.blue:before { background:#bdcfca; }
+.item-illustration { z-index:1; width:92px; height:135px; border-radius:30px 30px 14px 14px; background:linear-gradient(110deg,#faf7ed,#bcbeb0); box-shadow:18px 17px 22px #283b251a; position:relative; }
+.item-illustration:before { content:""; position:absolute; width:42px;height:8px;left:25px;top:-6px;border-radius:50%;background:#d7d6c8; }
+.item-illustration:after { content:"AF"; position:absolute; top:48%; left:0; right:0; text-align:center; font-family:Georgia,serif; font-size:17px; color:#657365; }
+.product-image.sand .item-illustration { height:108px; width:148px; border-radius:7px; background:linear-gradient(145deg,#f4eee3,#bcae99); transform:rotate(-4deg); }
+.product-image.blue .item-illustration { height:145px; width:105px; border-radius:4px 4px 25px 25px; background:linear-gradient(110deg,#f7f5ed,#9db2aa); }
+.product-meta { padding:21px 21px 20px; }
+.product-top { display:flex; justify-content:space-between; gap:12px; font-size:9px; color:#c0b49e; text-transform:uppercase; letter-spacing:.12em; }
+.product-meta h3 { font-family:var(--site-font-heading); font-size:23px; margin:12px 0 8px; }
+.product-meta p { font-size:11px; line-height:1.7; color:var(--muted); margin:0 0 18px; }
+.text-link { border:0; border-bottom:1px solid #aab7a8; padding:0 0 5px; background:transparent; color:#e6bd69; font-size:11px; font-weight:700; }
+.market { background:#183b33; color:#f6f3e9; position:relative; overflow:hidden; }
+.market:after { content:""; position:absolute; width:450px;height:450px;border:1px solid #ffffff12;border-radius:50%;right:-160px;top:-170px; box-shadow:0 0 0 45px #ffffff08,0 0 0 95px #ffffff05; pointer-events:none; }
+.market .eyebrow { color:#c0d2b9; }
+.market .section-head p { color:#c0c9bd; }
+.market h2 { max-width:650px; }
+.market-layout { display:grid; grid-template-columns:.8fr 1.2fr; gap:60px; align-items:start; position:relative; z-index:1; }
+.market-intro { font-size:13px; line-height:1.9; color:#c4d0c5; max-width:360px; }
+.market-stat { display:grid; grid-template-columns:1fr 1fr; border-top:1px solid #ffffff2d; }
+.stat { padding:22px 18px 22px 0; border-bottom:1px solid #ffffff2d; }
+.stat:nth-child(odd) { border-right:1px solid #ffffff2d; }
+.stat:nth-child(even) { padding-left:22px; }
+.stat strong { display:block; font-family:var(--site-font-heading); font-size:30px; font-weight:400; margin-bottom:8px; color:#d5e8b4; }
+.stat span { font-size:10px; color:#c4d0c5; line-height:1.6; display:block; }
+.market-footnote { font-size:9px; color:#aabbb0; margin-top:15px; line-height:1.6; }
+.insight-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:42px; }
+.insight { border-top:1px solid #ffffff5c; padding-top:18px; }
+.insight b { font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:#d5e8b4; }
+.insight h3 { font-family:var(--site-font-heading); font-size:22px; margin:14px 0 10px; }
+.insight p { color:#c4d0c5; font-size:11px; line-height:1.8; margin:0; }
+.method-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:48px; }
+.method { border-top:1px solid #cbd2c8; padding-top:17px; }
+.method-num { font-size:10px; color:#70816f; letter-spacing:.15em; }
+.method h3 { font-family:var(--site-font-heading); font-size:21px; margin:17px 0 10px; }
+.method p { color:var(--muted); font-size:11px; line-height:1.8; margin:0; }
+.cta-band { margin:0 clamp(18px,5vw,70px) 70px; padding:clamp(32px,5vw,60px); background:#26221c; border:1px solid #5a4224; color:var(--ink); display:flex; align-items:center; justify-content:space-between; gap:25px; }
+.cta-band h2 { font-family:var(--site-font-heading); font-size:clamp(28px,3.7vw,45px); line-height:1.08; max-width:550px; letter-spacing:-.04em; }
+.cta-band p { font-size:12px; line-height:1.8; color:#c6bdac; max-width:400px; }
+.footer { background:#191815; padding:44px clamp(24px,6vw,84px) 28px; border-top:1px solid var(--line); }
+.footer-top { display:flex; justify-content:space-between; gap:25px; padding-bottom:35px; border-bottom:1px solid var(--line); }
+.footer-brand p { color:var(--muted); font-size:11px; line-height:1.8; max-width:250px; }
+.footer-links { display:flex; gap:clamp(24px,5vw,70px); }
+.footer-links div { display:flex; flex-direction:column; gap:11px; font-size:11px; color:#c6bdac; }
+.footer-links strong { color:var(--ink); font-size:10px; text-transform:uppercase; letter-spacing:.12em; margin-bottom:4px; }
+.footer-bottom { padding-top:20px; display:flex; justify-content:space-between; gap:15px; font-size:9px; color:#858c82; }
+.modal-backdrop { position:fixed; inset:0; background:#14221ddd; display:none; place-items:center; z-index:10; padding:20px; }
+.modal-backdrop.open { display:grid; }
+.modal { background:var(--paper); color:var(--ink); padding:30px; max-width:470px; width:100%; position:relative; box-shadow:0 20px 80px #0004; }
+.modal h2 { font-family:var(--site-font-heading); font-size:32px; margin:8px 0 10px; }
+.modal p { color:var(--muted); font-size:12px; line-height:1.8; }
+.modal label { display:block; font-size:10px; text-transform:uppercase; letter-spacing:.1em; margin:16px 0 7px; color:#5c665d; }
+.modal input, .modal select { width:100%; padding:12px; border:1px solid var(--line); background:white; color:var(--ink); border-radius:2px; }
+.modal .button-primary { width:100%; margin-top:18px; }
+.close-modal { position:absolute; top:12px; right:14px; border:0; background:transparent; font-size:23px; color:#687267; }
+.form-success { display:none; padding:13px; background:#e7f0dd; color:#294f40; font-size:12px; margin-top:15px; line-height:1.6; }
+@media(max-width:800px) { .nav { height:68px; }.menu-toggle { display:block; }.navlinks { display:none; position:absolute; z-index:5; top:146px; left:0; right:0; padding:22px; background:var(--paper); border-bottom:1px solid var(--line); flex-direction:column; align-items:flex-start; }.navlinks.open { display:flex; }.nav-cta { display:none; }.hero { grid-template-columns:1fr; }.hero-copy { padding-top:62px; padding-bottom:50px; }.hero-art { min-height:390px; }.trust-row { grid-template-columns:1fr 1fr; }.section-head { align-items:flex-start; flex-direction:column; }.product-grid { grid-template-columns:1fr 1fr; }.market-layout { grid-template-columns:1fr; gap:25px; }.method-grid { grid-template-columns:1fr 1fr; }.cta-band { align-items:flex-start; flex-direction:column; }.footer-top { flex-direction:column; }.footer-links { flex-wrap:wrap; }.footer-bottom { flex-direction:column; } }
+@media(max-width:520px) { .product-grid { grid-template-columns:1fr; }.product-image { height:250px; }.insight-grid { grid-template-columns:1fr; }.trust-row { gap:16px 8px; padding:22px 18px; }.trust-item { font-size:10px; }.method-grid { grid-template-columns:1fr 1fr; }.stat strong { font-size:25px; }.section { padding-left:22px; padding-right:22px; } }
+.calculator-shell { background:#211f1b; border:1px solid #494034; padding:clamp(16px,3vw,30px); }
+.fighter-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.combatant { min-width:0; padding:22px; border:1px solid #4a4030; background:#191815; }
+.combatant-b { border-color:#3f4a49; }
+.combatant-heading { display:flex; align-items:center; gap:12px; margin-bottom:22px; }
+.fighter-token { display:grid; place-items:center; width:38px; height:38px; border:1px solid #c99742; border-radius:50%; color:#f1cd7b; font-family:var(--site-font-heading); font-size:21px; }
+.combatant-b .fighter-token { border-color:#83a5ab; color:#a9d0d3; }
+.combatant-heading h3 { font-family:var(--site-font-heading); font-size:24px; color:#f2eadb; }
+.combatant-heading p { margin:4px 0 0; color:#a9a08e; font-size:11px; }
+.field { min-width:0; margin-bottom:15px; }
+.field label { display:block; margin-bottom:7px; color:#d0c4ad; font-size:11px; line-height:1.5; }
+.field input { width:100%; min-width:0; padding:11px 12px; border:1px solid #514635; border-radius:3px; background:#121210; color:#f1eadb; outline:none; }
+.field input:focus { border-color:#d6b77a; box-shadow:0 0 0 2px #d6b77a22; }
+.range-field { margin-top:19px; }
+.range-field label { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px; color:#d0c4ad; font-size:11px; }
+.range-field output { color:#e6bd69; font-size:12px; font-weight:750; font-variant-numeric:tabular-nums; }
+.range-field input { width:100%; margin:0; accent-color:#d6a64d; cursor:pointer; }
+.combatant-b .range-field input { accent-color:#83a5ab; }
+.fight-result { border-top:1px solid #4a4030; margin-top:22px; padding-top:23px; }
+.result-top { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; color:#d6b77a; font-size:9px; font-weight:800; letter-spacing:.14em; }
+.estimate-tag { border:1px solid #6f5936; padding:5px 8px; border-radius:2px; color:#d5c3a3; letter-spacing:.08em; }
+.fight-result h3 { margin:18px 0 7px; font-family:var(--site-font-heading); font-size:clamp(24px,3vw,36px); color:#f4ead5; }
+.fight-result > p:not(.fine-print) { margin:0 0 22px; color:#b9b09e; font-size:12px; line-height:1.7; }
+.win-prob-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+.win-prob-head { display:flex; justify-content:space-between; gap:10px; align-items:baseline; margin-bottom:9px; color:#eee4d2; font-size:11px; }
+.win-prob-head strong:last-child { color:#e6bd69; font-size:15px; font-variant-numeric:tabular-nums; }
+.win-prob:last-child .win-prob-head strong:last-child { color:#a9d0d3; }
+.win-track { height:9px; background:#38342c; overflow:hidden; border-radius:10px; }
+.win-track span { display:block; height:100%; width:50%; background:linear-gradient(90deg,#8b5a2b,#e6bd69); transition:width .2s ease; }
+#bWinBar { background:linear-gradient(90deg,#436b71,#a9d0d3); }
+.score-row { display:flex; gap:12px; align-items:center; margin-top:23px; padding:14px 0; border-top:1px solid #4a4030; border-bottom:1px solid #4a4030; color:#b9b09e; font-size:11px; }
+.score-row strong { color:#f1eadb; font-size:16px; font-variant-numeric:tabular-nums; }
+.score-row span:first-child { margin-right:auto; }
+.fine-print { margin:18px 0 0; color:#9d9585; font-size:10px; line-height:1.75; }
+.craft-shell { display:grid; grid-template-columns:1.05fr .95fr; gap:25px; align-items:start; }
+.craft-inputs { display:grid; grid-template-columns:1fr 1fr; gap:0 14px; }
+.field-wide { grid-column:1 / -1; }
+.field-hint { margin:0 0 0; color:#9e9687; font-size:10px; line-height:1.7; }
+.craft-results { padding:23px; background:#171614; border:1px solid #494034; min-width:0; }
+.recipe-label { color:#f1eadb; font-family:var(--site-font-heading); font-size:21px; margin:18px 0 15px; overflow-wrap:anywhere; }
+.profit-hero { padding:18px; background:#282218; border:1px solid #6a4c26; display:flex; flex-direction:column; gap:7px; }
+.profit-hero span:first-child { color:#cdbd9e; font-size:11px; }
+.profit-hero strong { color:#e6bd69; font-size:clamp(25px,3vw,36px); font-weight:700; letter-spacing:-.04em; overflow-wrap:anywhere; }
+.profit-hero strong.negative { color:#ee9188; }
+.profit-hero span:last-child { color:#d6b77a; font-size:9px; font-weight:800; letter-spacing:.12em; }
+.profit-hero span:last-child.negative { color:#ee9188; }
+.craft-metrics { display:grid; grid-template-columns:1fr 1fr; gap:0 16px; margin-top:10px; }
+.metric { padding:15px 0; border-bottom:1px solid #39342b; min-width:0; }
+.metric span { display:block; color:#a9a08e; font-size:10px; margin-bottom:7px; }
+.metric strong { display:block; color:#eee4d2; font-size:13px; overflow-wrap:anywhere; font-variant-numeric:tabular-nums; }
+.metric-highlight strong { color:#e6bd69; font-size:16px; }
+.how-section { padding-top:70px; }
+.how-section h2 { margin-top:15px; }
+@media(max-width:800px) { .fighter-grid,.craft-shell { grid-template-columns:1fr; }.craft-shell { gap:22px; }.combatant { padding:18px; }.section-head p { max-width:560px; } }
+@media(max-width:520px) { .fighter-grid,.win-prob-grid { grid-template-columns:1fr; }.craft-inputs,.craft-metrics { grid-template-columns:1fr; }.field-wide { grid-column:auto; }.result-top { align-items:flex-start; flex-direction:column; }.score-row { flex-wrap:wrap; }.score-row span:first-child { width:100%; }.craft-results { padding:17px; }.calculator-shell { padding:12px; }.combatant { padding:15px; } }
+</style>
+</head>
+<body>
+<div class="app" id="top">
+  <div class="announcement"><span>●</span> ALBION ONLINE TOOLS FOR BETTER FIGHTS & SMARTER SILVER <span>↗</span></div>
+  <header class="nav">
+    <a class="brand" href="#top" aria-label="AO Refinery home"><span class="brand-mark">AO</span> AO REFINERY</a>
+    <nav class="navlinks" id="navlinks"><a href="#fight">Fight estimator</a><a href="#craft">Craft profit</a><a href="#how-it-works">How it works</a></nav>
+    <a class="nav-cta" href="#fight">Compare builds ↗</a><button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-copy"><div class="eyebrow">Albion Online combat & economy tools</div><h1>Fight smarter.<br><em>Craft for profit.</em></h1><p>Compare two player builds to estimate who has the advantage, then calculate whether your next crafted item is likely to return a profit in silver.</p><div class="hero-actions"><a class="button-primary" href="#fight">Compare two builds ↗</a><a class="button-secondary" href="#craft">Calculate crafting profit</a></div><div class="hero-note"><span class="note-dot"></span> COMMUNITY TOOL · ESTIMATES, NOT GUARANTEES</div></div>
+      <div class="hero-art" role="img" aria-label="Gold fantasy coin emblem for Albion Online tools"><span class="art-label top">AO REFINERY / PLAYER TOOLS</span><div class="arch"></div><div class="product-shape"></div><div class="art-card"><small>Two tools. One goal.</small><strong>Better builds.<br>Better margins.</strong></div><span class="art-label bottom">Compare · Calculate · Improve<br>Keep your silver working</span></div>
+    </section>
+    <div class="trust-row"><div class="trust-item"><span class="trust-icon">⚔</span><span>Build vs build<br>fight estimate</span></div><div class="trust-item"><span class="trust-icon">◈</span><span>Item power &<br>combat stats</span></div><div class="trust-item"><span class="trust-icon">⚒</span><span>Crafting cost<br>breakdown</span></div><div class="trust-item"><span class="trust-icon">↗</span><span>Profit, margin<br>& return on cost</span></div></div>
+    <section class="section" id="fight">
+      <div class="section-head"><div><div class="eyebrow">Tool 01 / Fight estimator</div><h2>Which build has the edge?</h2></div><p>Compare item power and the strengths of two builds. The result is a rough matchup estimate to help think through a fight—not a guaranteed outcome or a live combat simulator.</p></div>
+      <div class="calculator-shell">
+        <div class="fighter-grid">
+          <article class="combatant"><div class="combatant-heading"><span class="fighter-token">A</span><div><h3>Build A</h3><p>Your build</p></div></div>
+            <div class="field"><label for="aName">Build / weapon</label><input id="aName" type="text" value="Dual Swords · Brawler" maxlength="70"></div>
+            <div class="field"><label for="aIp">Average item power</label><input id="aIp" type="number" min="700" max="1800" value="1250"></div>
+            <div class="range-field"><label for="aDamage">Damage potential <output id="aDamageOut">70</output></label><input id="aDamage" type="range" min="0" max="100" value="70" data-stat="damage"></div>
+            <div class="range-field"><label for="aDefense">Survivability <output id="aDefenseOut">68</output></label><input id="aDefense" type="range" min="0" max="100" value="68" data-stat="defense"></div>
+            <div class="range-field"><label for="aMobility">Mobility <output id="aMobilityOut">65</output></label><input id="aMobility" type="range" min="0" max="100" value="65" data-stat="mobility"></div>
+            <div class="range-field"><label for="aSustain">Sustain / healing <output id="aSustainOut">58</output></label><input id="aSustain" type="range" min="0" max="100" value="58" data-stat="sustain"></div>
+            <div class="range-field"><label for="aControl">Crowd control <output id="aControlOut">62</output></label><input id="aControl" type="range" min="0" max="100" value="62" data-stat="control"></div>
+            <div class="range-field"><label for="aSkill">Player skill / familiarity <output id="aSkillOut">72</output></label><input id="aSkill" type="range" min="0" max="100" value="72" data-stat="skill"></div>
+          </article>
+          <article class="combatant combatant-b"><div class="combatant-heading"><span class="fighter-token">B</span><div><h3>Build B</h3><p>Opponent</p></div></div>
+            <div class="field"><label for="bName">Build / weapon</label><input id="bName" type="text" value="Spear · Skirmisher" maxlength="70"></div>
+            <div class="field"><label for="bIp">Average item power</label><input id="bIp" type="number" min="700" max="1800" value="1220"></div>
+            <div class="range-field"><label for="bDamage">Damage potential <output id="bDamageOut">65</output></label><input id="bDamage" type="range" min="0" max="100" value="65" data-stat="damage"></div>
+            <div class="range-field"><label for="bDefense">Survivability <output id="bDefenseOut">70</output></label><input id="bDefense" type="range" min="0" max="100" value="70" data-stat="defense"></div>
+            <div class="range-field"><label for="bMobility">Mobility <output id="bMobilityOut">74</output></label><input id="bMobility" type="range" min="0" max="100" value="74" data-stat="mobility"></div>
+            <div class="range-field"><label for="bSustain">Sustain / healing <output id="bSustainOut">65</output></label><input id="bSustain" type="range" min="0" max="100" value="65" data-stat="sustain"></div>
+            <div class="range-field"><label for="bControl">Crowd control <output id="bControlOut">58</output></label><input id="bControl" type="range" min="0" max="100" value="58" data-stat="control"></div>
+            <div class="range-field"><label for="bSkill">Player skill / familiarity <output id="bSkillOut">65</output></label><input id="bSkill" type="range" min="0" max="100" value="65" data-stat="skill"></div>
+          </article>
+        </div>
+        <div class="fight-result"><div class="result-top"><span>ESTIMATED MATCHUP</span><span class="estimate-tag">MODEL · NOT A GUARANTEE</span></div><h3 id="fightWinner" aria-live="polite">Calculating matchup…</h3><p id="fightSummary">Adjust item power and build ratings to compare the estimated odds.</p>
+          <div class="win-prob-grid"><div class="win-prob"><div class="win-prob-head"><strong id="aNameResult">Dual Swords · Brawler</strong><strong id="aChance">—%</strong></div><div class="win-track"><span id="aWinBar"></span></div></div><div class="win-prob"><div class="win-prob-head"><strong id="bNameResult">Spear · Skirmisher</strong><strong id="bChance">—%</strong></div><div class="win-track"><span id="bWinBar"></span></div></div></div>
+          <div class="score-row"><span>Model score</span><strong id="aScore">—</strong><span>vs</span><strong id="bScore">—</strong></div><p class="fine-print">This estimate uses weighted user-entered ratings plus item power. It does not simulate Albion Online's abilities, weapon/armor counters, cooldowns, food, potions, terrain, latency, or player decisions. Set the ratings based on your own build knowledge.</p>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="craft">
+      <div class="section-head"><div><div class="eyebrow">Tool 02 / Crafting calculator</div><h2>Is this craft worth your silver?</h2></div><p>Enter your current market prices and crafting costs to calculate expected profit, margin, and return on cost. All calculations update as you change an input.</p></div>
+      <div class="calculator-shell craft-shell">
+        <div class="craft-inputs">
+          <div class="field field-wide"><label for="craftItem">Item / recipe name</label><input id="craftItem" type="text" value="Tier 6 weapon · example" maxlength="100"></div>
+          <div class="field"><label for="craftPrice">Expected sale price per item (silver)</label><input id="craftPrice" type="number" min="0" step="1" value="120000"></div>
+          <div class="field"><label for="craftQty">Number of items crafted</label><input id="craftQty" type="number" min="1" step="1" value="1"></div>
+          <div class="field"><label for="craftMaterials">Total materials cost per batch (silver)</label><input id="craftMaterials" type="number" min="0" step="1" value="75000"></div>
+          <div class="field"><label for="craftReturn">Effective resource return rate (%)</label><input id="craftReturn" type="number" min="0" max="95" step="0.1" value="0"></div>
+          <div class="field"><label for="craftStation">Station / crafting fee per batch (silver)</label><input id="craftStation" type="number" min="0" step="1" value="5000"></div>
+          <div class="field"><label for="craftOther">Other costs per batch (silver)</label><input id="craftOther" type="number" min="0" step="1" value="1000"></div>
+          <div class="field"><label for="craftFees">Selling tax & fees (%)</label><input id="craftFees" type="number" min="0" max="100" step="0.1" value="4"></div>
+          <p class="field-hint field-wide">Use the effective resource return rate as your estimated reduction in material cost. If your material total already includes returns, leave it at 0%. Enter your own current prices; this calculator does not fetch live market data.</p>
+        </div>
+        <div class="craft-results"><div class="result-top"><span>CRAFTING BREAKDOWN</span><span class="estimate-tag">SILVER ESTIMATE</span></div><p class="recipe-label" id="craftItemResult">Tier 6 weapon · example</p><div class="profit-hero"><span>Estimated net profit</span><strong id="craftProfit">—</strong><span id="craftStatus">Calculating…</span></div>
+          <div class="craft-metrics"><div class="metric"><span>Gross sales revenue</span><strong id="craftGross">—</strong></div><div class="metric"><span>Selling fees</span><strong id="craftFeeAmount">—</strong></div><div class="metric"><span>Materials after return</span><strong id="craftMaterialNet">—</strong></div><div class="metric"><span>Net sales after fees</span><strong id="craftNetSales">—</strong></div><div class="metric"><span>Total batch costs</span><strong id="craftTotalCost">—</strong></div><div class="metric metric-highlight"><span>Profit margin</span><strong id="craftMargin">—</strong></div><div class="metric metric-highlight"><span>Return on cost (ROI)</span><strong id="craftRoi">—</strong></div><div class="metric"><span>Profit per item</span><strong id="craftPerItem">—</strong></div></div>
+          <p class="fine-print">Estimate assumes all crafted items sell at the entered price. It excludes costs you do not enter and cannot predict unsold orders, changing markets, or any game-specific return/fee bonus that you have not included.</p>
+        </div>
+      </div>
+    </section>
+    <section class="section how-section" id="how-it-works"><div class="eyebrow">Know what the numbers mean</div><h2>Useful estimates.<br>Clear assumptions.</h2><div class="method-grid"><div class="method"><div class="method-num">FIGHT / 01</div><h3>Rate each build</h3><p>Adjust item power and six strengths to reflect the build and player using it.</p></div><div class="method"><div class="method-num">FIGHT / 02</div><h3>Compare the odds</h3><p>The weighted score maps to an estimated chance, not a promise of who wins.</p></div><div class="method"><div class="method-num">CRAFT / 01</div><h3>Use current prices</h3><p>Enter sale prices, resource costs, station fees, return rate, and selling fees.</p></div><div class="method"><div class="method-num">CRAFT / 02</div><h3>Check your margin</h3><p>Review net profit and ROI before investing silver; verify prices in-game first.</p></div></div></section>
+    <section class="cta-band" id="about"><div><div class="eyebrow">AO Refinery</div><h2>Make better fight and crafting decisions.</h2></div><div><p>Built around two practical questions: does my build have an edge, and will this craft make silver after costs?</p><a class="button-primary" href="#fight" style="display:inline-block">Compare builds ↗</a> <a class="button-secondary" href="#craft" style="display:inline-block">Calculate a craft ↗</a></div></section>
+  </main>
+  <footer class="footer"><div class="footer-top"><div class="footer-brand"><a class="brand" href="#top"><span class="brand-mark">AO</span> AO REFINERY</a><p>Fight matchup estimates and crafting profit calculations for Albion Online players.</p></div><div class="footer-links"><div><strong>Calculators</strong><a href="#fight">Fight estimator</a><a href="#craft">Craft profit</a><a href="#how-it-works">Assumptions</a></div><div><strong>Project</strong><a href="#about">About AO Refinery</a><a href="#top">Back to top ↑</a></div></div></div><div class="footer-bottom"><span>© 2026 AO Refinery. Community tool concept.</span><span>Albion Online is a trademark of its respective owner. Not affiliated with Sandbox Interactive.</span></div></footer>
+</div>
+<script>
+const menuToggle=document.getElementById('menuToggle');
+const navlinks=document.getElementById('navlinks');
+menuToggle.addEventListener('click',()=>navlinks.classList.toggle('open'));
+navlinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navlinks.classList.remove('open')));
+const fmtSilver=n=>Math.round(n).toLocaleString('en-US')+' silver';
+const val=id=>{const el=document.getElementById(id);const n=Number(el.value);return Number.isFinite(n)?n:0;};
+const statWeights={damage:.26,defense:.22,mobility:.13,sustain:.16,control:.10,skill:.13};
+function getBuild(prefix){let weighted=0;for(const [name,weight] of Object.entries(statWeights)){weighted+=val(prefix+({damage:'Damage',defense:'Defense',mobility:'Mobility',sustain:'Sustain',control:'Control',skill:'Skill'}[name]))*weight;}const ip=Math.max(700,Math.min(1800,val(prefix+'Ip')));return {name:document.getElementById(prefix+'Name').value.trim()||('Build '+prefix.toUpperCase()),score:weighted+(ip-1000)*.035,ip};}
+function updateFight(){const a=getBuild('a'),b=getBuild('b');const diff=a.score-b.score;let chanceA=100/(1+Math.exp(-diff/14));chanceA=Math.max(2,Math.min(98,chanceA));const chanceB=100-chanceA;document.getElementById('aNameResult').textContent=a.name;document.getElementById('bNameResult').textContent=b.name;document.getElementById('aChance').textContent=chanceA.toFixed(1)+'%';document.getElementById('bChance').textContent=chanceB.toFixed(1)+'%';document.getElementById('aWinBar').style.width=chanceA+'%';document.getElementById('bWinBar').style.width=chanceB+'%';document.getElementById('aScore').textContent=a.score.toFixed(1);document.getElementById('bScore').textContent=b.score.toFixed(1);const winner=document.getElementById('fightWinner');if(Math.abs(diff)<1){winner.textContent='The builds look evenly matched';}else{winner.textContent=(diff>0?a.name:b.name)+' has the modelled edge';}document.getElementById('fightSummary').textContent='Estimated odds: '+chanceA.toFixed(1)+'% for Build A vs '+chanceB.toFixed(1)+'% for Build B, based on the ratings entered.';}
+document.querySelectorAll('#fight input').forEach(el=>{el.addEventListener('input',()=>{if(el.type==='range'){const out=document.getElementById(el.id+'Out');if(out)out.value=el.value;}updateFight();});});
+function updateCraft(){const price=Math.max(0,val('craftPrice')),qty=Math.max(1,Math.floor(val('craftQty'))),rawMaterials=Math.max(0,val('craftMaterials')),ret=Math.max(0,Math.min(95,val('craftReturn')))/100,station=Math.max(0,val('craftStation')),other=Math.max(0,val('craftOther')),feeRate=Math.max(0,Math.min(100,val('craftFees')))/100;const gross=price*qty,fees=gross*feeRate,netSales=gross-fees,materials=rawMaterials*(1-ret),costs=materials+station+other,profit=netSales-costs,margin=netSales>0?profit/netSales*100:0,roi=costs>0?profit/costs*100:0;document.getElementById('craftItemResult').textContent=document.getElementById('craftItem').value.trim()||'Unnamed item';document.getElementById('craftGross').textContent=fmtSilver(gross);document.getElementById('craftFeeAmount').textContent=fmtSilver(fees);document.getElementById('craftMaterialNet').textContent=fmtSilver(materials);document.getElementById('craftNetSales').textContent=fmtSilver(netSales);document.getElementById('craftTotalCost').textContent=fmtSilver(costs);document.getElementById('craftProfit').textContent=(profit<0?'−':'')+fmtSilver(Math.abs(profit));document.getElementById('craftMargin').textContent=margin.toFixed(2)+'%';document.getElementById('craftRoi').textContent=roi.toFixed(2)+'%';document.getElementById('craftPerItem').textContent=(profit/qty<0?'−':'')+fmtSilver(Math.abs(profit/qty));const status=document.getElementById('craftStatus');status.textContent=profit>0?'PROFITABLE AT THESE INPUTS':profit<0?'LOSS AT THESE INPUTS':'BREAK-EVEN AT THESE INPUTS';status.classList.toggle('negative',profit<0);document.getElementById('craftProfit').classList.toggle('negative',profit<0);}
+document.querySelectorAll('#craft input').forEach(el=>el.addEventListener('input',updateCraft));
+updateFight();updateCraft();
+</script>
+</body></html>
